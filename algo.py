@@ -14,37 +14,43 @@ graph = {"NY": set(["Iceland", "Maine"]),
         "Amsterdam": set([]),
         "Egypt": set([])}
 
+
 def find_paths(graph, start, destination):
     if graph.get(start) is None or graph.get(destination) is None: return None
     visited, queue = set(), collections.deque([start])
     visited.add(start)
 
-    paths = []
+    neighbors = {}
+    paths = {}
 
     while queue:
         vertex = queue.popleft()
-    
-        for neighbor in graph[vertex]: 
-            if neighbor == destination:
-                if start == vertex:
-                    paths.append([start, neighbor])
-                else:
-                    paths.append([start, vertex, neighbor])
 
 
+        for neighbor in graph[vertex]:
+            # if neighbor == destination:
+            #     if start == vertex:
+            #         paths.append([start, neighbor])
+            #     else:
+            #         paths.append([start, vertex, neighbor])
+            
+            #check if the vertex is a neighbor to the start. if it is, create a path
+            if vertex in graph[start]:
+                paths[vertex] = [start, vertex]
+                neighbors[vertex] = set()
+                neighbors[vertex].add(neighbor)
+                
+
+            #if the vertex is a neighbor to a neighbor, add to that neighbor's path
+      
             if neighbor not in visited:
                 visited.add(neighbor)
                 queue.append(neighbor)
 
-    return paths if len(paths) > 0 else -1
+    print(neighbors)
+    return paths if len(paths) > 0 else None
 
 
 print(find_paths(graph, "NY", "London")) 
 #[['NY', 'Maine', 'London'], ['NY', 'Iceland', 'London'], ['NY', 'Paris', 'London']]
 
-print(find_paths(graph, "NY", "Berlin")) # [['NY', 'London', 'Berlin']]
-print(find_paths(graph, "Amsterdam", "London")) # -1
-print(find_paths(graph, "NY", "Egypt")) # [['NY', 'London', 'Berlin']]
-print(find_paths(graph, "California", "Oregon")) # None
-print(find_paths(graph, "Paris", "Amsterdam")) # [['Paris', 'Amsterdam']]
-print(find_paths(graph, "Berlin", "Amsterdam")) # [['Berlin', 'Paris', 'Amsterdam']]
