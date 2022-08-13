@@ -1,56 +1,53 @@
 import collections
+from pydoc import pathdirs
 
 # flights  =  "NY -> Iceland -> London -> Berlin, \
 #     NY -> Maine -> London, \
 #     Berlin -> Paris -> Amsterdam, \
 #     Paris -> London -> Egypt"
 
-graph = {"NY": set(["Iceland", "Maine"]),
-        "Maine": set(["London"]),
-        "London": set(['Berlin', "Egypt"]),
-        "Iceland": set(["London"]),
-        'Berlin': set(["Paris"]),
-        "Paris": set(["London", "Amsterdam"]),
-        "Amsterdam": set([]),
-        "Egypt": set([])}
+graph = {
+        "NY": ["Iceland", "Maine"],
+        "Maine": ["London"],
+        "London": ["Berlin", "Egypt"],
+        "Iceland": ["London"],
+        'Berlin': ["Paris"],
+        "Paris": ["Amsterdam"],
+        "Amsterdam": [],
+        "Egypt": []
+    }
 
 
 def find_paths(graph, start, destination):
-    if graph.get(start) is None or graph.get(destination) is None: return None
-    visited, queue = set(), collections.deque([start])
-    visited.add(start)
+    # if graph.get(start) is None or graph.get(destination) is None: return None
+    stack = [[start]]
+    # visited.add(start)
+    paths = []
+    while stack:
+        node = stack.pop()
+        if node[-1] == destination: continue #breaking because we are skipping the destination node
 
-    neighbors = {}
-    paths = {}
+        for neighbor in graph[node[-1]]:
+            if node[-1] == start:
+                stack.append([start, neighbor])
+            else: 
+                node.append(neighbor) 
+                stack.append(node)
 
-    while queue:
-        vertex = queue.popleft()
+            if neighbor == destination:
+                paths.append(stack[-1])
+                # stack = stack.pop()
+                # stack = []
+                break
+        
 
 
-        for neighbor in graph[vertex]:
-            # if neighbor == destination:
-            #     if start == vertex:
-            #         paths.append([start, neighbor])
-            #     else:
-            #         paths.append([start, vertex, neighbor])
-            
-            #check if the vertex is a neighbor to the start. if it is, create a path
-            if vertex in graph[start]:
-                paths[vertex] = [start, vertex]
-                neighbors[vertex] = set()
-                neighbors[vertex].add(neighbor)
-                
-
-            #if the vertex is a neighbor to a neighbor, add to that neighbor's path
-      
-            if neighbor not in visited:
-                visited.add(neighbor)
-                queue.append(neighbor)
-
-    print(neighbors)
     return paths if len(paths) > 0 else None
 
 
-print(find_paths(graph, "NY", "London")) 
+print(find_paths(graph, "NY", "Egypt")) 
 #[['NY', 'Maine', 'London'], ['NY', 'Iceland', 'London'], ['NY', 'Paris', 'London']]
+
+#node = [NY], stack = [[NY, Iceland], [NY, Maine]]
+#node = [NY, Maine], stack = [[NY, Iceland]]
 
