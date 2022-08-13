@@ -20,6 +20,7 @@ graph = {
 def find_paths(graph, start, destination):
     queue = [[start]]
     paths = []
+    visited = set()
 
     while queue:
         node = queue.pop(0)
@@ -37,7 +38,7 @@ def find_paths(graph, start, destination):
     return paths if len(paths) > 0 else None
 
 
-print(find_paths(graph, "NY", "Paris"))
+print(find_paths(graph, "NY", "London"))
 
 
 #node = [NY], queue = []
