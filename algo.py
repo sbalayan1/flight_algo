@@ -24,21 +24,28 @@ def find_paths(graph, start, destination):
 
     while queue:
         node = queue.pop(0)
-
+        # if node[-1] == destination: break
         for neighbor in graph[node[-1]]:
             if node[-1] == start:
                 queue.append([start, neighbor])
             else:
-                node.append(neighbor)
-                if destination != neighbor:
+                # if len(graph[node[-1]]) > 1:
+                    #start = NY, Destination = Paris
+                    #in cases where a node has multiple edges, we have to add to the queue like so:
+                    #[NY, Iceland, London, Berlin] and [NY, Iceland, London, Berlin]. Instead we 
+
+                if neighbor != destination:
+                    node.append(neighbor)
                     queue.append(node)
                 else:
+                    node.append(neighbor)
                     paths.append(node)
+                    break
 
     return paths if len(paths) > 0 else None
 
 
-print(find_paths(graph, "NY", "London"))
+print(find_paths(graph, "NY", "Paris"))
 
 
 #node = [NY], queue = []
