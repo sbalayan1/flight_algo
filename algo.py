@@ -7,7 +7,8 @@ from pydoc import pathdirs
 #     Paris -> London -> Egypt"
 
 graph = {
-        "NY": ["Iceland", "Maine"],
+        "NY": ["Iceland", "Maine", "Jordan", "Egypt"],
+        "Jordan": [],
         "Maine": ["London"],
         "London": ["Berlin", "Egypt"],
         "Iceland": ["London"],
@@ -17,35 +18,109 @@ graph = {
         "Egypt": []
     }
 
+
+# arr = [ny, maine, london]
+
+# berlin
+# iceland
+# stack
+
+
+def test_dfs(graph, start, destination):
+    arr = []
+    stack = [start]
+    visited = set(start)
+
+    while stack:
+        node = stack.pop()
+        #if a start/destination doesn't have a path
+        #if a node has no edges and is not the destination:
+        if node != destination and graph[node]:
+            arr.append(node)
+
+        if node == destination:
+            arr.append(node)
+            return arr
+
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                stack.append(neighbor)
+                visited.add(neighbor)
+
+    return False
+# paths = [[NY, Maine, London]]
+
 def find_paths(graph, start, destination):
-    queue = [[start]]
     paths = []
-    visited = set()
+    for neighbor in graph[start]:
+        if neighbor == destination:
+            paths.append([start, neighbor])
+            break
 
-    while queue:
-        node = queue.pop(0)
-        # if node[-1] == destination: break
-        for neighbor in graph[node[-1]]:
-            if node[-1] == start:
-                queue.append([start, neighbor])
-            else:
-                # if len(graph[node[-1]]) > 1:
-                    # start = NY, Destination = Paris
-                    # in cases where a node has multiple edges, we have to add to the queue like so:
-                    # [NY, Iceland, London, Berlin] and [NY, Iceland, London, Berlin]. Instead we 
+        has_path(graph, start, neighbor, destination, paths)
+    
+    return paths
 
-                if neighbor != destination:
-                    node.append(neighbor)
-                    queue.append(node)
-                else:
-                    node.append(neighbor)
-                    paths.append(node)
-                    break
+def has_path(graph, start, neighbor, destination, paths):
+    result = [start]
+    stack = [neighbor]
+    visited = set(start)
+    visited.add(neighbor) 
 
-    return paths if len(paths) > 0 else None
+    while stack:
+        node = stack.pop()
+        if node != destination and graph[node]:
+            result.append(node)
+
+        if node == destination:
+            result.append(node)
+            paths.append(result)
+            return
+
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                stack.append(neighbor)
+
+    return False
+        
+print(find_paths(graph, "NY", "Egypt"))
+    # return False
+
+    #may need something to notify if a path was found or not
 
 
-print(find_paths(graph, "NY", "Berlin"))
+# print(find_paths(graph, "NY", "Maine"))
+
+# def find_paths(graph, start, destination):
+#     queue = [[start]]
+#     paths = []
+#     visited = set()
+
+#     while queue:
+#         node = queue.pop(0)
+#         # if node[-1] == destination: break
+#         for neighbor in graph[node[-1]]:
+#             if node[-1] == start:
+#                 queue.append([start, neighbor])
+#             else:
+#                 # if len(graph[node[-1]]) > 1:
+#                     # start = NY, Destination = Paris
+#                     # in cases where a node has multiple edges, we have to add to the queue like so:
+#                     # [NY, Iceland, London, Berlin] and [NY, Iceland, London, Berlin]. Instead we 
+
+#                 if neighbor != destination:
+#                     node.append(neighbor)
+#                     queue.append(node)
+#                 else:
+#                     node.append(neighbor)
+#                     paths.append(node)
+#                     break
+
+#     return paths if len(paths) > 0 else None
+
+
+# print(find_paths(graph, "NY", "Berlin"))
 
 
 #node = [NY], queue = []
