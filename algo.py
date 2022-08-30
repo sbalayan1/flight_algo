@@ -28,6 +28,9 @@
 
 #add duplicates to the queue for the number of edges of a given node
 
+from distutils.util import convert_path
+
+
 graph = {
         "NY": ["Iceland", "Maine"],
         "Maine": ["London"],
@@ -40,7 +43,7 @@ graph = {
     }
 
 
-flights  =  "NY -> Iceland -> London -> Berlin NY -> Maine -> London Berlin -> Paris -> Amsterdam Paris -> London -> Egypt Maine -> London -> Berlin Maine -> Berlin Iceland -> Berlin"
+flights  =  "NY -> Iceland -> London -> Berlin NY -> Maine -> London Berlin -> Paris -> Amsterdam Paris -> London -> Egypt"
 
 
 # pointer = false
@@ -114,12 +117,11 @@ def process_queue(queue, graph):
 
     return graph
 
-print(convert_string(flights))
-
-def find_paths_bfs(graph, start, destination):
+def find_paths_bfs(flights, start, destination):
     result = []
     queue = [[start]]
-
+    graph = convert_string(flights)
+ 
     while queue:
         node = queue.pop(0)
         visited = set(node)
@@ -139,7 +141,7 @@ def find_paths_bfs(graph, start, destination):
 
     return result
 
-# print(find_paths_bfs(graph, "NY", "Paris"))
+print(find_paths_bfs(flights, "NY", "London"))
 
 
 
